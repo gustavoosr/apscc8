@@ -1,0 +1,41 @@
+CREATE TABLE water_consumption (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  organization_id INT UNSIGNED NOT NULL,
+  sector_id INT UNSIGNED NOT NULL,
+  reference_month DATE NOT NULL COMMENT 'Sempre dia 1 do mês',
+  quantity_m3 DECIMAL(14,3) NOT NULL,
+  original_quantity DECIMAL(14,3) NOT NULL,
+  original_unit ENUM('m3','L') NOT NULL DEFAULT 'm3',
+  notes VARCHAR(500) NULL,
+  is_demo TINYINT(1) NOT NULL DEFAULT 0,
+  created_by INT UNSIGNED NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deleted_at TIMESTAMP NULL,
+  KEY idx_water_org_month (organization_id, reference_month),
+  KEY idx_water_sector (sector_id),
+  CONSTRAINT ck_water_qty CHECK (quantity_m3 >= 0),
+  CONSTRAINT fk_water_org FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE RESTRICT,
+  CONSTRAINT fk_water_sector FOREIGN KEY (sector_id) REFERENCES sectors(id) ON DELETE RESTRICT,
+  CONSTRAINT fk_water_user FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE energy_consumption (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  organization_id INT UNSIGNED NOT NULL,
+  sector_id INT UNSIGNED NOT NULL,
+  reference_month DATE NOT NULL COMMENT 'Sempre dia 1 do mês',
+  quantity_kwh DECIMAL(14,3) NOT NULL,
+  notes VARCHAR(500) NULL,
+  is_demo TINYINT(1) NOT NULL DEFAULT 0,
+  created_by INT UNSIGNED NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deleted_at TIMESTAMP NULL,
+  KEY idx_energy_org_month (organization_id, reference_month),
+  KEY idx_energy_sector (sector_id),
+  CONSTRAINT ck_energy_qty CHECK (quantity_kwh >= 0),
+  CONSTRAINT fk_energy_org FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE RESTRICT,
+  CONSTRAINT fk_energy_sector FOREIGN KEY (sector_id) REFERENCES sectors(id) ON DELETE RESTRICT,
+  CONSTRAINT fk_energy_user FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB;

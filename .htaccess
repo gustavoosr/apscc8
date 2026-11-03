@@ -1,0 +1,2 @@
+# Protege a raiz caso o Apache aponte para a pasta do projeto: nega tudo exceto public/
+Require all denied
